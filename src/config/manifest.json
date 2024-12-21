@@ -1,0 +1,21 @@
+{
+    "name": "Your App Name",
+    "description": "A simple app",
+    "auth_callback_urls": [
+      "https://bd6c-49-34-202-106.ngrok-free.app/oauth/callback"
+    ],
+    "scopes": [
+      "store_v2_products_read_only"
+    ],
+    "modules": [
+      {
+        "type": "storefront",
+        "url": "https://bd6c-49-34-202-106.ngrok-free.app/dashboard",
+        "title": "My App",
+        "categories": [
+          "products"
+        ]
+      }
+    ]
+  }
+  

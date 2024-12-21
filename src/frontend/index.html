@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BigCommerce Products</title>
+    <script>
+        async function fetchProducts() {
+            const response = await fetch('/products');  
+            const data = await response.json();
+
+            const productContainer = document.getElementById('product-list');
+            productContainer.innerHTML = ''; // Clear previous content
+
+            if (data.error) {
+                console.error(data.error);
+                productContainer.innerHTML = `<p>Error fetching products: ${data.error}</p>`;
+                return;
+            }
+
+            data.data.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.innerHTML = `<h3>${product.name}</h3><p>${product.description}</p>`;
+                productContainer.appendChild(productDiv);
+            });
+        }
+
+        async function fetchProductById() {
+            const productId = prompt("Enter Product ID:");
+            const response = await fetch(`/products/${productId}`);
+            const data = await response.json();
+
+            const productContainer = document.getElementById('product-list');
+            productContainer.innerHTML = ''; // Clear previous content
+
+            if (data.error) {
+                console.error(data.error);
+                productContainer.innerHTML = `<p>Error fetching product: ${data.error}</p>`;
+                return;
+            }
+
+            const productDiv = document.createElement('div');
+            productDiv.innerHTML = `<h3>${data.data.name}</h3><p>${data.data.description}</p>`;
+            productContainer.appendChild(productDiv);
+        }
+
+        async function searchProducts() {
+            const query = prompt("Enter search keyword:");
+            const response = await fetch(`/products/search/${query}`);
+            const data = await response.json();
+
+            const productContainer = document.getElementById('product-list');
+            productContainer.innerHTML = ''; // Clear previous content
+
+            if (data.error) {
+                console.error(data.error);
+                productContainer.innerHTML = `<p>Error searching products: ${data.error}</p>`;
+                return;
+            }
+
+            data.data.forEach(product => {
+                const productDiv = document.createElement('div');
+                productDiv.innerHTML = `<h3>${product.name}</h3><p>${product.description}</p>`;
+                productContainer.appendChild(productDiv);
+            });
+        }
+
+        async function updateProduct() {
+    const productId = prompt("Enter Product ID to update:");
+    const newDescription = prompt("Enter new description for the product:");
+    
+    // Ask user to provide a base64 encoded image
+    const imageFile = document.getElementById('image-input').files[0];
+
+            if (!imageFile) {
+                alert("Please select an image!");
+                return;
+            }
+
+    const response = await fetch(`/products/update/${productId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            description: newDescription,
+            image_base64: base64Image  // Sending base64 image data
+        })
+    });
+
+    const data = await response.json();
+
+    const productContainer = document.getElementById('product-list');
+    productContainer.innerHTML = ''; // Clear previous content
+
+    if (data.error) {
+        console.error(data.error);
+        productContainer.innerHTML = `<p>Error updating product: ${data.error}</p>`;
+        return;
+    }
+
+    productContainer.innerHTML = `<p>Product updated successfully!</p>`;
+}
+
+    </script>
+</head>
+<body>
+    <h1>BigCommerce Products</h1>
+
+    <nav>
+        <ul>
+            <li><a href="#" onclick="fetchProducts()">Get All Products</a></li>
+            <li><a href="#" onclick="fetchProductById()">Get Product by ID</a></li>
+            <li><a href="#" onclick="searchProducts()">Search Products by Keyword</a></li>
+            <li><a href="#" onclick="updateProduct()">Update Product</a></li>
+        </ul>
+    </nav>
+
+    <div id="product-list"></div>
+</body>
+</html>
